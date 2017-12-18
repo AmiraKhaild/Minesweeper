@@ -1,15 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #define EASY_BOARD_SIZE 6
 #define Medium_BOARD_SIZE 9
 #define Hard_BOARD_SIZE 12
+///////////// Easy level functions////////////////////////////////
 char EASY_game_board[EASY_BOARD_SIZE][EASY_BOARD_SIZE];
-char Medium_game_board[Medium_BOARD_SIZE][Medium_BOARD_SIZE];
-char Hard_game_board[Hard_BOARD_SIZE][Hard_BOARD_SIZE];
-void LEVEL_SELLECTION();
 void Easy_board_building ();
+void Easy_mines_generation();
+///////////////////////////////////////////////////////////////////
+/////////////////Medium level functions/////////////////////////////
+char Medium_game_board[Medium_BOARD_SIZE][Medium_BOARD_SIZE];
 void Medium_board_building ();
+///////////////////////////////////////////////////////////////////
+/////////////////Hard level functions/////////////////////////////
+char Hard_game_board[Hard_BOARD_SIZE][Hard_BOARD_SIZE];
 void Hard_board_building ();
+/////////////////////////////////////////////////////////////////////
+void LEVEL_SELLECTION();
+
 
 int main()
 {
@@ -34,6 +43,8 @@ void LEVEL_SELLECTION()
        break;
         }
 }
+///////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Easy level functions//////////////////////////////////
 void Easy_board_building ()
 {
 
@@ -65,6 +76,25 @@ void Easy_board_building ()
         printf("\n");
     }
 }
+void Easy_mines_generation()
+{
+    int i, random;
+
+    // to generate random places of mines every new game
+    srand(time(0));
+     /* every path in this loop will generate a random number from 0 to board size ( in this case from 0 to 6) and will
+     put it in the variable (random) .. then the element [random][i] of the board array will be assigned by '*'*/
+     //........................................................................................................//
+     /* this means that the loop will generate the mines in 6 random ( different) places every time the game runs */
+    for (i = 0; i < EASY_BOARD_SIZE; i++)
+    {
+        random = rand() % (EASY_BOARD_SIZE);
+        board[random][i] = '*';
+    }
+
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////Medium level functions////////////////////////////////////////////////////////////////////
 void Medium_board_building ()
 {
     int i, j;
@@ -94,6 +124,9 @@ void Medium_board_building ()
         printf("\n");
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////Hard level functions/////////////////////////////////////////////////
 void Hard_board_building ()
 {
     int i, j;
