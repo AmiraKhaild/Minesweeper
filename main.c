@@ -14,8 +14,11 @@ clock_t my_time,start_t,end_t;
 int moves=0;
 int mines;
 int flags=0;
-long scorearray[10];
-char HighScoreNames[10][30];
+int loaded=0;
+double mytime;
+int questionmarks=0;
+int scorearray[10];
+char HighScoreNames[10][100];
 int scoresize;
 int read_high_score();
 void write_in_file();
@@ -43,6 +46,7 @@ if(f==NULL){
 }
 //printf("check t");
 fprintf(f,"%d\t%d\n",row,column);
+fprintf(f,"Moves: %d\nFlags: %d\nQuestion Marks: %d\nTime: %.0lf seconds\n\n",moves,flags,questionmarks,mytime);
 for(i=0;i<row;i++){
     for(j=0;j<column;j++){
     fprintf(f,"%c ",my_data[i][j]);
@@ -92,6 +96,8 @@ board=(char**)malloc(row*sizeof(char*));
         board[i]=(char*)malloc(column*sizeof(char));
         my_data[i]=(char*)malloc(column*sizeof(char));
     }
+    fscanf(f,"Moves: %d\nFlags: %d\nQuestion Marks: %d\nTime: %lf seconds\n\n",&moves,&flags,&questionmarks,&mytime);
+    loaded=1;
 for(i=0;i<row;i++){
    //printf("enter 1");
     for(j=0;j<column;j++){
@@ -154,7 +160,8 @@ void question()
         printf("(((You can't question an open cell!!)))\n");
     else{
         board[r-1][c-1]='?';
-        moves++;}
+        moves++;
+        questionmarks++;}
     //printf("%c",board[r-1][c-1]);
     display_board(2);
 }
@@ -389,6 +396,16 @@ void create_board(){
 void display_board(int way){
     int i,j;
     system("cls");
+    if(loaded!=1)
+    {
+    end_t=clock();
+    mytime=(double)(end_t-start_t)/1000;
+    if(mytime<1)
+        mytime=1.0;
+        if(way==1)
+            mytime=0.0;
+    }
+    printf("Moves: %d\nFlags: %d\nQuestion Marks: %d\nTime: %.0lf seconds\n\n",moves,flags,questionmarks,mytime);
     printf("  |");
     for(j=0;j<column;j++)
     {
@@ -579,12 +596,11 @@ void after_win()
 {
     long score;
     end_t=clock();
-    double time;
-    time=(double)(end_t-start_t)/1000;
-    if(time<1)
-        time=1.0;
+    mytime=(double)(end_t-start_t)/1000;
+    if(mytime<1)
+        mytime=1.0;
     //printf("%f and %d\n",time,moves);
-    score=((pow(row,4))*(pow(column,4)))/(int)(time*moves);
+    score=((pow(row,4))*(pow(column,4)))/(int)(mytime*moves);
         printf("Score=%ld\n\n",score);
         printf("Enter your name to save you score: \n");
         fflush(stdin);
@@ -664,7 +680,7 @@ int i=0;
      }
      while(!feof(f1))
      {
-         fscanf(f1,"%[^,],%ld",HighScoreNames[i],&scorearray[i]);
+         fscanf(f1,"%[^,],%d",HighScoreNames[i],&scorearray[i]);
          fscanf(f1,"\n");
 i++;
      }
@@ -679,7 +695,7 @@ void print_high_score()
     printf("  NAME\t\t\t\tSCORE\n");
 
     for (i=scoresize; i>0;i--)
-    printf("%d)%s\t\t\t%ld\n",j++,HighScoreNames[i-1],scorearray[i-1]);
+    printf("%d)%s\t\t\t%d\n",j++,HighScoreNames[i-1],scorearray[i-1]);
     char c;
     fflush(stdin);
     printf("\nEnter any key to return to main menu\n");
@@ -705,6 +721,7 @@ void main_menu()
         load_game();
         break;
     case 3:
+        sorting_the_scores();
         print_high_score();
         break;
     case 4:
