@@ -714,7 +714,6 @@ void main_menu()
 }
 int main()
 {
-    scoresize=0;
    scoresize=read_high_score();
     main_menu();
     return 0;
